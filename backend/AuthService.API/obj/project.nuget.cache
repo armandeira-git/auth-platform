@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "M0kQh63r73o=",
+  "success": true,
+  "projectFilePath": "C:\\Docker\\auth-platform\\backend\\AuthService.API\\AuthService.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\arman\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.0\\microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512",
+    "C:\\Users\\arman\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
