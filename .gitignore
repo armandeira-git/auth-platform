@@ -1,0 +1,21 @@
+# .NET
+bin/
+obj/
+
+# VS Code
+.vscode/
+
+# Angular
+node_modules/
+dist/
+
+# Logs
+*.log
+
+# User files
+*.user
+*.suo
+
+# Secrets
+appsettings.Development.json
+.env
