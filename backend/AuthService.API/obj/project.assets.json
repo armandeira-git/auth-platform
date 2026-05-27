@@ -891,6 +891,34 @@
             "related": ".xml"
           }
         }
+      },
+      "AuthService.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.8"
+        },
+        "compile": {
+          "bin/placeholder/AuthService.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AuthService.Domain.dll": {}
+        }
+      },
+      "AuthService.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "AuthService.Domain": "1.0.0",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.8",
+          "Microsoft.EntityFrameworkCore": "10.0.8"
+        },
+        "compile": {
+          "bin/placeholder/AuthService.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AuthService.Infrastructure.dll": {}
+        }
       }
     }
   },
@@ -2949,13 +2977,25 @@
         "system.identitymodel.tokens.jwt.8.0.1.nupkg.sha512",
         "system.identitymodel.tokens.jwt.nuspec"
       ]
+    },
+    "AuthService.Domain/1.0.0": {
+      "type": "project",
+      "path": "../AuthService.Domain/AuthService.Domain.csproj",
+      "msbuildProject": "../AuthService.Domain/AuthService.Domain.csproj"
+    },
+    "AuthService.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../AuthService.Infrastructure/AuthService.Infrastructure.csproj",
+      "msbuildProject": "../AuthService.Infrastructure/AuthService.Infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "AuthService.Infrastructure >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.8",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 10.0.8",
       "Microsoft.AspNetCore.OpenApi >= 10.0.0",
+      "Microsoft.EntityFrameworkCore >= 10.0.8",
       "Microsoft.EntityFrameworkCore.Design >= 10.0.8",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 10.0.1",
       "Swashbuckle.AspNetCore >= 10.1.7"
@@ -2985,7 +3025,11 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Docker\\auth-platform\\backend\\AuthService.Infrastructure\\AuthService.Infrastructure.csproj": {
+              "projectPath": "C:\\Docker\\auth-platform\\backend\\AuthService.Infrastructure\\AuthService.Infrastructure.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -3015,6 +3059,10 @@
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
             "version": "[10.0.0, )"
+          },
+          "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[10.0.8, )"
           },
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
