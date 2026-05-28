@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+
+  api:
+    build:
+      context: ./backend/AuthService.API
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  frontend:
+    build:
+      context: ./frontend/angular-auth-app
+    ports:
+      - "4200:80"
