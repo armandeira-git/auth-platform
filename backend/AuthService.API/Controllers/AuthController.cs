@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthService.API.Controllers;
 
@@ -92,5 +93,15 @@ public class AuthController : ControllerBase
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    [Authorize]
+    [HttpGet("profile")]
+    public IActionResult Profile()
+    {
+        return Ok(new
+        {
+            message = "Authenticated user"
+        });
     }
 }

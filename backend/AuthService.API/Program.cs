@@ -1,8 +1,8 @@
-using AuthService.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 using System.Text;
+using AuthService.Domain.Entities;
 using AuthService.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
