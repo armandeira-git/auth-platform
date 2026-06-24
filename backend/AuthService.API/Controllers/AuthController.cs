@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using AuthService.Application.Services;
 
 namespace AuthService.API.Controllers;
 
@@ -16,13 +17,16 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
+    private readonly IJwtTokenService _jwtTokenService;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IJwtTokenService jwtTokenService)
     {
         _userManager = userManager;
         _configuration = configuration;
+        _jwtTokenService = jwtTokenService;
     }
 
     [HttpPost("register")]
@@ -62,37 +66,14 @@ public class AuthController : ControllerBase
         if (!validPassword)
             return Unauthorized();
 
-        var token = GenerateJwt(user);
+        var token = _jwtTokenService.GenerateToken(
+            user.Id,
+            user.Email!);
 
         return Ok(new
         {
             token
         });
-    }
-
-    private string GenerateJwt(ApplicationUser user)
-    {
-        var claims = new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email!)
-        };
-
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-
-        var credentials = new SigningCredentials(
-            key,
-            SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(2),
-            signingCredentials: credentials);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     [Authorize]
