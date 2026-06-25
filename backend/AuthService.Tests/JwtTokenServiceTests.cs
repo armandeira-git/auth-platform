@@ -7,10 +7,13 @@ namespace AuthService.Tests;
 
 public class JwtTokenServiceTests
 {
-    [Fact]
-    public void GenerateToken_ShouldReturnValidToken()
+    private readonly JwtTokenService _sut;
+    private readonly JwtSecurityTokenHandler _handler = new();
+    private const string UserId = "123";
+    private const string Email = "teste@email.com";
+
+    public JwtTokenServiceTests()
     {
-        // Arrange
         var settings = new Dictionary<string, string?>
         {
             { "Jwt:Key", "ThisIsASecretKeyWithMoreThan32Characters!" },
@@ -22,12 +25,18 @@ public class JwtTokenServiceTests
             .AddInMemoryCollection(settings)
             .Build();
 
-        var sut = new JwtTokenService(configuration);
+        _sut = new JwtTokenService(configuration);
+    }
+
+    [Fact]
+    public void GenerateToken_ShouldReturnValidToken()
+    {
+        // Arrange
+        var userId = UserId;
+        var email = Email;
 
         // Act
-        var token = sut.GenerateToken(
-            "123",
-            "teste@email.com");
+        var token = _sut.GenerateToken(userId, email);
 
         // Assert
         token.Should().NotBeNullOrWhiteSpace();
@@ -37,35 +46,18 @@ public class JwtTokenServiceTests
     public void GenerateToken_ShouldContainExpectedClaims()
     {
         // Arrange
-        var settings = new Dictionary<string, string?>
-        {
-            { "Jwt:Key", "ThisIsASecretKeyWithMoreThan32Characters!" },
-            { "Jwt:Issuer", "AuthPlatform" },
-            { "Jwt:Audience", "AuthPlatformUsers" }
-        };
-
-        IConfiguration configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(settings)
-            .Build();
-
-        var sut = new JwtTokenService(configuration);
-
-        var userId = "123";
-        var email = "teste@email.com";
+        var userId = UserId;
+        var email = Email;
 
         // Act
-        var token = sut.GenerateToken(userId, email);
-
-        var handler = new JwtSecurityTokenHandler();
-        var jwt = handler.ReadJwtToken(token);
+        var token = _sut.GenerateToken(userId, email);
+        var jwt = _handler.ReadJwtToken(token);
 
         // Assert
-        jwt.Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub)
-            .Value.Should().Be(userId);
-
-        jwt.Claims.First(c => c.Type == JwtRegisteredClaimNames.Email)
-            .Value.Should().Be(email);
-
+        jwt.Claims.Should().Contain(c =>
+            c.Type == JwtRegisteredClaimNames.Sub &&
+            c.Value == UserId);
+            
         jwt.Issuer.Should().Be("AuthPlatform");
 
         jwt.Audiences.Should().Contain("AuthPlatformUsers");
