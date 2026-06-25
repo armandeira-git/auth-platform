@@ -36,7 +36,7 @@ public class JwtTokenServiceTests
         var email = Email;
 
         // Act
-        var token = _sut.GenerateToken(userId, email);
+        var token = _sut.GenerateToken(userId, email, "Armando Bandeira");
 
         // Assert
         token.Should().NotBeNullOrWhiteSpace();
@@ -50,14 +50,22 @@ public class JwtTokenServiceTests
         var email = Email;
 
         // Act
-        var token = _sut.GenerateToken(userId, email);
+        var token = _sut.GenerateToken(userId, email, "Armando Bandeira");
         var jwt = _handler.ReadJwtToken(token);
 
         // Assert
         jwt.Claims.Should().Contain(c =>
             c.Type == JwtRegisteredClaimNames.Sub &&
             c.Value == UserId);
-            
+
+        jwt.Claims.Should().Contain(c =>
+            c.Type == JwtRegisteredClaimNames.Email &&
+            c.Value == Email);
+
+        jwt.Claims.Should().Contain(c =>
+            c.Type == JwtRegisteredClaimNames.Name &&
+            c.Value == "Armando Bandeira");
+
         jwt.Issuer.Should().Be("AuthPlatform");
 
         jwt.Audiences.Should().Contain("AuthPlatformUsers");

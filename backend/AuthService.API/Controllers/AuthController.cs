@@ -68,7 +68,8 @@ public class AuthController : ControllerBase
 
         var token = _jwtTokenService.GenerateToken(
             user.Id,
-            user.Email!);
+            user.Email!,
+            user.FullName!);
 
         return Ok(new
         {

@@ -16,12 +16,13 @@ public class JwtTokenService : IJwtTokenService
         _configuration = configuration;
     }
 
-    public string GenerateToken(string userId, string email)
+    public string GenerateToken(string userId, string email, string fullName)
     {
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId),
-            new Claim(JwtRegisteredClaimNames.Email, email)
+            new Claim(JwtRegisteredClaimNames.Email, email),
+            new Claim(JwtRegisteredClaimNames.Name, fullName)
         };
 
         var key = new SymmetricSecurityKey(
