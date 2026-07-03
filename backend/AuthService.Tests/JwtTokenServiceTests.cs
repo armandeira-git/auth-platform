@@ -11,6 +11,7 @@ public class JwtTokenServiceTests
     private readonly JwtSecurityTokenHandler _handler = new();
     private const string UserId = "123";
     private const string Email = "teste@email.com";
+    private const string FullName = "Armando Bandeira";
 
     public JwtTokenServiceTests()
     {
@@ -36,7 +37,7 @@ public class JwtTokenServiceTests
         var email = Email;
 
         // Act
-        var token = _sut.GenerateToken(userId, email, "Armando Bandeira");
+        var token = _sut.GenerateToken(userId, email, FullName);
 
         // Assert
         token.Should().NotBeNullOrWhiteSpace();
@@ -50,7 +51,7 @@ public class JwtTokenServiceTests
         var email = Email;
 
         // Act
-        var token = _sut.GenerateToken(userId, email, "Armando Bandeira");
+        var token = _sut.GenerateToken(userId, email, FullName);
         var jwt = _handler.ReadJwtToken(token);
 
         // Assert
@@ -65,6 +66,14 @@ public class JwtTokenServiceTests
         jwt.Claims.Should().Contain(c =>
             c.Type == JwtRegisteredClaimNames.Name &&
             c.Value == "Armando Bandeira");
+        
+        var jtiClaim = jwt.Claims.Single(c =>
+            c.Type == JwtRegisteredClaimNames.Jti);
+
+        jtiClaim.Value.Should().NotBeNullOrWhiteSpace();
+
+        Guid.TryParse(jtiClaim.Value, out _)
+            .Should().BeTrue();
 
         jwt.Issuer.Should().Be("AuthPlatform");
 
