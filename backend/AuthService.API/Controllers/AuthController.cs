@@ -81,9 +81,15 @@ public class AuthController : ControllerBase
     [HttpGet("profile")]
     public IActionResult Profile()
     {
+        var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        var email = User.FindFirstValue(JwtRegisteredClaimNames.Email);
+        var fullName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+
         return Ok(new
         {
-            message = "Authenticated user"
+            id = userId,
+            fullName,
+            email
         });
     }
 }
