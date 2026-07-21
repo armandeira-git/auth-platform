@@ -37,7 +37,7 @@ public class JwtTokenServiceTests
         var email = Email;
 
         // Act
-        var token = _sut.GenerateToken(userId, email, FullName);
+        var token = _sut.GenerateToken(userId, email, FullName, ["User"]);
 
         // Assert
         token.Should().NotBeNullOrWhiteSpace();
@@ -51,7 +51,7 @@ public class JwtTokenServiceTests
         var email = Email;
 
         // Act
-        var token = _sut.GenerateToken(userId, email, FullName);
+        var token = _sut.GenerateToken(userId, email, FullName, ["User"]);
         var jwt = _handler.ReadJwtToken(token);
 
         // Assert

@@ -46,6 +46,11 @@ public class AuthController : ControllerBase
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
+        var roleResult = await _userManager.AddToRoleAsync(user, "User");
+
+        if (!roleResult.Succeeded)
+            return BadRequest(roleResult.Errors);
+
         return Ok(new
         {
             message = "User created successfully"
@@ -65,11 +70,14 @@ public class AuthController : ControllerBase
 
         if (!validPassword)
             return Unauthorized();
+        
+        var roles = await _userManager.GetRolesAsync(user);
 
         var token = _jwtTokenService.GenerateToken(
             user.Id,
             user.Email!,
-            user.FullName!);
+            user.FullName!,
+            roles);
 
         return Ok(new
         {
@@ -90,6 +98,26 @@ public class AuthController : ControllerBase
             id = userId,
             fullName,
             email
+        });
+    }
+
+    [Authorize(Roles = "User")]
+    [HttpGet("user")]
+    public IActionResult UserOnly()
+    {
+        return Ok(new
+        {
+            message = "Welcome User!"
+        });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin")]
+    public IActionResult AdminOnly()
+    {
+        return Ok(new
+        {
+            message = "Welcome Admin!"
         });
     }
 }
