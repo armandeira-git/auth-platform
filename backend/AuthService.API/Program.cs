@@ -1,12 +1,16 @@
 using System.Text;
+
+using AuthService.Application.Services;
 using AuthService.Domain.Entities;
 using AuthService.Infrastructure.Persistence;
+using AuthService.Infrastructure.Persistence.Seeders;
+using AuthService.Infrastructure.Services;
+
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using AuthService.Application.Services;
-using AuthService.Infrastructure.Services;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -73,24 +77,7 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    string[] roles =
-    {
-        "Admin",
-        "User"
-    };
-
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
-}
+await RoleSeeder.SeedAsync(app.Services);
 
 app.UseSwagger();
 app.UseSwaggerUI();
