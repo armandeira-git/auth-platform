@@ -1,12 +1,10 @@
 using AuthService.API.DTOs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using AuthService.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using AuthService.Application.Services;
 
 namespace AuthService.API.Controllers;
@@ -16,16 +14,13 @@ namespace AuthService.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IConfiguration _configuration;
     private readonly IJwtTokenService _jwtTokenService;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
-        IConfiguration configuration,
         IJwtTokenService jwtTokenService)
     {
         _userManager = userManager;
-        _configuration = configuration;
         _jwtTokenService = jwtTokenService;
     }
 
