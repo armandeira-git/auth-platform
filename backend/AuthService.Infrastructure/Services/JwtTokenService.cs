@@ -10,6 +10,7 @@ namespace AuthService.Infrastructure.Services;
 public class JwtTokenService : IJwtTokenService
 {
     private readonly IConfiguration _configuration;
+    private const string RoleClaimType = "role";
 
     public JwtTokenService(IConfiguration configuration)
     {
@@ -27,7 +28,7 @@ public class JwtTokenService : IJwtTokenService
         };
 
         claims.AddRange(
-            roles.Select(role => new Claim("role", role)));
+            roles.Select(role => new Claim(RoleClaimType, role)));
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
