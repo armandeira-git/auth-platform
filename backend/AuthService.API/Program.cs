@@ -6,7 +6,6 @@ using AuthService.Infrastructure.Persistence;
 using AuthService.Infrastructure.Persistence.Seeders;
 using AuthService.Infrastructure.Services;
 
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -78,6 +77,7 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 await RoleSeeder.SeedAsync(app.Services);
+await AdminSeeder.SeedAsync(app.Services);
 
 app.UseSwagger();
 app.UseSwaggerUI();

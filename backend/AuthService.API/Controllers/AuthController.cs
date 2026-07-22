@@ -115,4 +115,27 @@ public class AuthController : ControllerBase
             message = "Welcome Admin!"
         });
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("promote/{email}")]
+    public async Task<IActionResult> PromoteToAdmin(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user is null)
+            return NotFound();
+
+        if (await _userManager.IsInRoleAsync(user, "Admin"))
+            return BadRequest("User is already an administrator.");
+
+        var result = await _userManager.AddToRoleAsync(user, "Admin");
+
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
+
+        return Ok(new
+        {
+            message = $"{email} promoted to Admin."
+        });
+    }
 }
