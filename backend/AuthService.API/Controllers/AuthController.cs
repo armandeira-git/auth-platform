@@ -1,3 +1,4 @@
+using AuthService.Application.DTOs;
 using AuthService.API.DTOs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using AuthService.Application.Services;
+
 
 namespace AuthService.API.Controllers;
 
@@ -135,7 +137,35 @@ public class AuthController : ControllerBase
 
         return Ok(new
         {
-            message = $"{email} promoted to Admin."
+            email,
+            role = "Admin",
+            message = "User promoted successfully."
         });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("users")]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+    {
+        var users = _userManager.Users
+            .OrderBy(u => u.FullName)
+            .ToList();
+
+        var result = new List<UserDto>();
+
+        foreach (var user in users)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+
+            result.Add(new UserDto
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email!,
+                Roles = roles
+            });
+        }
+
+        return Ok(result);
     }
 }
